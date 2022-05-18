@@ -43,7 +43,7 @@ def crear_steps(mock_utils_asign_inserted, midd):
 def snake_a_cammel(palabra_snake):
     return ''.join([word.capitalize() for word in palabra_snake.split("_")])
 
-def obtener_json(datos, nombre, tipo):
+def crear_archivos_jsons(datos, nombre, tipo):
     if not os.path.isdir('jsons'):
         os.mkdir('jsons')
     nombreArchivoGenerico = "jsons/Request{nombre}{tipo}{numero}.json"
@@ -79,7 +79,7 @@ def obtener_json(datos, nombre, tipo):
             outfile.write(json.dumps(jsonRequest, indent=4))
         contador += 1
 
-def creador_jsons():
+def obtener_datos_y_o_crear_jsons(crear_jsons = True):
     ESPERANDO = 0
     EXTRAER_NOMBRES = 1
     EXTRAER_DATOS = 2
@@ -114,7 +114,8 @@ def creador_jsons():
             if estado_actual == EXTRAER_DATOS and linea.find("|") != -1:
                 datos["DATAS_DATOS"].append(linea)
             elif estado_actual == EXTRAER_DATOS:
-                obtener_json(datos, nombre_archivo.split(".")[0], tipo_actual)
+                if crear_jsons:
+                    crear_archivos_jsons(datos, nombre_archivo.split(".")[0], tipo_actual)
                 if tipo_actual == "":
                     mock["cantidadOk"] = len(datos["DATAS_DATOS"])
                 elif tipo_actual == "Error":
@@ -139,7 +140,8 @@ def creador_jsons():
                 estado_actual = EXTRAER_NOMBRES
 
         if estado_actual == EXTRAER_DATOS:
-            obtener_json(datos, "mantenimiento_requis_passing_paq", tipo_actual)
+            if crear_jsons:
+                crear_archivos_jsons(datos, nombre_archivo.split(".")[0], tipo_actual)
             if tipo_actual == "":
                 mock["cantidadOk"] = len(datos["DATAS_DATOS"])
             elif tipo_actual == "Error":
@@ -167,9 +169,9 @@ while aceptar == False:
     if correcto == "1":
         aceptar = True
 
-listado_de_mocks = None
-
 if opcion_crear_jsons == "1":
-    listado_de_mocks = creador_jsons()
+    listado_de_mocks = obtener_datos_y_o_crear_jsons()
+else:
+    listado_de_mocks = obtener_datos_y_o_crear_jsons(False)
 if opcion_crear_steps == "1":
     crear_steps(listado_de_mocks, carpetaMidd)
