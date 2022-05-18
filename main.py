@@ -10,6 +10,11 @@ def decapitalize_first_letter(s, upper_rest = False):
   return ''.join([s[:1].lower(), (s[1:].upper() if upper_rest else s[1:])])
 
 def crear_steps(mock_utils_asign_inserted, midd):
+    if not os.path.isdir('steps'):
+        os.mkdir('steps')
+    if not os.path.isdir('steps/{midd}'.format(midd=midd)):
+        os.mkdir('steps/{midd}'.format(midd=midd))
+
 
     mock_utils_asign = [
         {"programInternList": ["PEKM"], "programFormat1": "datos_kyc"},
@@ -39,6 +44,8 @@ def snake_a_cammel(palabra_snake):
     return ''.join([word.capitalize() for word in palabra_snake.split("_")])
 
 def obtener_json(datos, nombre, tipo):
+    if not os.path.isdir('jsons'):
+        os.mkdir('jsons')
     nombreArchivoGenerico = "jsons/Request{nombre}{tipo}{numero}.json"
     dataTitulos = datos["DATA_TITULOS"].split(datos["SEPARADOR_REQ"])
     dataTitulos.pop(0)
@@ -81,6 +88,8 @@ def creador_jsons():
     estado_actual = 0
 
     path = 'gherkings'
+    if not os.path.isdir('gherkings'):
+        os.mkdir('gherkings')
     listado_de_nombres_archivos = os.listdir(path)
     print(listado_de_nombres_archivos)
     listado_mock = []
