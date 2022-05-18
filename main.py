@@ -138,6 +138,9 @@ def obtener_datos_y_o_crear_jsons(crear_jsons = True):
                 tipo_actual = "Error"
             if linea.find("Examples:") != -1:
                 estado_actual = EXTRAER_NOMBRES
+            if linea.find("Transacción") != -1:
+                linea_actual = linea.replace("Transacción", "")
+                mock["programInternList"] = [servicios.strip() for servicios in linea_actual.split(",")]
 
         if estado_actual == EXTRAER_DATOS:
             if crear_jsons:
@@ -154,10 +157,13 @@ def obtener_datos_y_o_crear_jsons(crear_jsons = True):
 
 
 aceptar = False
-carpetaMidd = input("ingrese el nombre del MIDD: ")
-opcion_crear_jsons = input("quiere crear los jsons: Si(1) No(0) ")
-opcion_crear_steps = input("quiere crear los steps: Si(1) No(0) ")
+carpetaMidd = None
+opcion_crear_jsons = None
+opcion_crear_steps = None
 while aceptar == False:
+    carpetaMidd = input("ingrese el nombre del MIDD: ")
+    opcion_crear_jsons = input("quiere crear los jsons: Si(1) No(0) ")
+    opcion_crear_steps = input("quiere crear los steps: Si(1) No(0) ")
     opcion_json = "NO"
     opcion_step = "NO"
     if opcion_crear_jsons == "1":
