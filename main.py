@@ -97,7 +97,7 @@ def obtener_datos_y_o_crear_jsons(crear_jsons = True):
         archivo = open(path + '/' + nombre_archivo , 'r')
         lineas = archivo.readlines()
         datos = {
-            "HEADER_REQUEST": "",
+            "HEADER_REQUEST": "autotest",
             "TIENE_OK_Y_CODIGO": True,
             "DATA_TITULOS": "",
             "DATAS_DATOS": [],
@@ -121,7 +121,7 @@ def obtener_datos_y_o_crear_jsons(crear_jsons = True):
                 elif tipo_actual == "Error":
                     mock["cantidadError"] = len(datos["DATAS_DATOS"])
                 datos = {
-                    "HEADER_REQUEST": "",
+                    "HEADER_REQUEST": "autotest",
                     "TIENE_OK_Y_CODIGO": True,
                     "DATA_TITULOS": "",
                     "DATAS_DATOS": [],
