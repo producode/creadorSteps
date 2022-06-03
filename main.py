@@ -44,9 +44,13 @@ def snake_a_cammel(palabra_snake):
     return ''.join([word.capitalize() for word in palabra_snake.split("_")])
 
 def crear_archivos_jsons(datos, nombre, tipo):
+    tipoResponse = tipo
+    if tipo == "":
+        tipoResponse = "Ok"
     if not os.path.isdir('jsons'):
         os.mkdir('jsons')
     nombreArchivoGenerico = "jsons/Request{nombre}{tipo}{numero}.json"
+    nombreArchivoGenericoResponse = "jsons/Response{nombre}{tipo}{numero}.json"
     dataTitulos = datos["DATA_TITULOS"].split(datos["SEPARADOR_REQ"])
     dataTitulos.pop(0)
     dataTitulos.pop(0)
@@ -73,9 +77,13 @@ def crear_archivos_jsons(datos, nombre, tipo):
                 jsonRequest["data"][dataTitulos[i].strip()] = dataDatos[i].strip()
         if contador != 1:
             nombreArchivo = nombreArchivoGenerico.format(nombre=snake_a_cammel(nombre), tipo=tipo, numero=str(contador))
+            ResponseArchivo = nombreArchivoGenericoResponse.format(nombre=snake_a_cammel(nombre), tipo=tipoResponse, numero=str(contador))
         else:
             nombreArchivo = nombreArchivoGenerico.format(nombre=snake_a_cammel(nombre), tipo=tipo, numero="")
+            ResponseArchivo = nombreArchivoGenericoResponse.format(nombre=snake_a_cammel(nombre), tipo=tipoResponse, numero="")
         with open(nombreArchivo, "w") as outfile:
+            outfile.write(json.dumps(jsonRequest, indent=4))
+        with open(ResponseArchivo, "w") as outfile:
             outfile.write(json.dumps(jsonRequest, indent=4))
         contador += 1
 
