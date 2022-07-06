@@ -1,21 +1,22 @@
 import os
 import funciones
 
-# INICIO
-carpetaMidd, opcion_crear_jsons, opcion_crear_steps = funciones.interfaz()
-
 #Crea carpeta principal
 if not os.path.isdir('gherkins'):
     os.mkdir('gherkins')
-
-#Adapta los gherkins
-funciones.modificarListaDeArchivos("gherkins", 'Transacci�n', "Transaccion")
-funciones.modificarListaDeArchivos("gherkins", 'Transaccin', "Transaccion")
-
-#Crea los datos
-if opcion_crear_jsons == "1":
-    listado_de_mocks = funciones.obtener_datos_y_o_crear_jsons()
+    print("carpeta creda, i")
 else:
-    listado_de_mocks = funciones.obtener_datos_y_o_crear_jsons(False)
-if opcion_crear_steps == "1":
-    funciones.crear_steps(listado_de_mocks, carpetaMidd)
+    #Ejecuta la interfaz
+    carpetaMidd, opcion_crear_jsons, opcion_crear_steps = funciones.interfaz()
+
+    #Adapta los gherkins
+    funciones.modificarListaDeArchivos("gherkins", 'Transacci�n', "Transaccion")
+    funciones.modificarListaDeArchivos("gherkins", 'Transaccin', "Transaccion")
+
+    #Crea los datos
+    if opcion_crear_jsons == "1":
+        listado_de_mocks = funciones.obtener_datos_y_o_crear_jsons()
+    else:
+        listado_de_mocks = funciones.obtener_datos_y_o_crear_jsons(False)
+    if opcion_crear_steps == "1":
+        funciones.crear_steps(listado_de_mocks, carpetaMidd)
