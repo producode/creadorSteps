@@ -130,7 +130,8 @@ def obtener_datos_y_o_crear_jsons(crear_jsons=True):
                 datos["DATAS_DATOS"].append(linea)
             elif estado_actual == EXTRAER_DATOS:
                 if crear_jsons:
-                    crear_archivos_jsons(datos, nombre_archivo.split(".")[0], tipo_actual)
+                    crear_archivos_jsons(datos, nombre_archivo.split(".")[0], tipo_actual, mock["programInternList"])
+                    cargar_csv(datos, mock["programInternList"], mock)
                 if tipo_actual == "":
                     mock["cantidadOk"] = len(datos["DATAS_DATOS"])
                 elif tipo_actual == "Error":
@@ -159,7 +160,8 @@ def obtener_datos_y_o_crear_jsons(crear_jsons=True):
 
         if estado_actual == EXTRAER_DATOS:
             if crear_jsons:
-                crear_archivos_jsons(datos, nombre_archivo.split(".")[0], tipo_actual)
+                crear_archivos_jsons(datos, nombre_archivo.split(".")[0], tipo_actual, mock["programInternList"])
+                cargar_csv(datos, mock["programInternList"], mock)
             if tipo_actual == "":
                 mock["cantidadOk"] = len(datos["DATAS_DATOS"])
             elif tipo_actual == "Error":
