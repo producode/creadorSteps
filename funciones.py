@@ -42,14 +42,21 @@ def snake_a_cammel(palabra_snake):
     return ''.join([word.capitalize() for word in palabra_snake.split("_")])
 
 
-def crear_archivos_jsons(datos, nombre, tipo):
+def crear_archivos_jsons(datos, nombre, tipo, programas):
     tipoResponse = tipo
-    if tipo == "":
-        tipoResponse = "Ok"
+
     if not os.path.isdir('jsons'):
         os.mkdir('jsons')
-    nombreArchivoGenerico = "jsons/Request{nombre}{tipo}{numero}.json"
-    nombreArchivoGenericoResponse = "jsons/Response{nombre}{tipo}{numero}.json"
+
+    path = 'jsons/' + snake_a_cammel(nombre)
+
+    if not os.path.isdir(path):
+        os.mkdir(path)
+        for programa in programas:
+            crear_config_json(path, programa)
+
+    nombreArchivoGenerico = "jsons/{nombre}/Request{nombre}{tipo}{numero}.json"
+    nombreArchivoGenericoResponse = "jsons/{nombre}/Response{nombre}{tipo}{numero}.json"
     dataTitulos = datos["DATA_TITULOS"].split(datos["SEPARADOR_REQ"])
     dataTitulos.pop(0)
     dataTitulos.pop(0)
@@ -175,6 +182,97 @@ def modificarListaDeArchivos(carpeta, buscar, modificar):
         nuevoArchivo.close()
         archivoAbierto.close()
 
+def cargar_csv(datos, programas, mock):
+
+    if not os.path.isdir('jsons\postman'):
+        os.mkdir('jsons\postman')
+        with open("jsons\postman\postman.csv", "w") as outfile:
+            fieldnames = ["servicio", "gherking", "data"]
+            file = csv.DictWriter(outfile, fieldnames=fieldnames)
+            file.writeheader()
+
+    dataTitulos = datos["DATA_TITULOS"].split(datos["SEPARADOR_REQ"])
+    dataTitulos.pop(0)
+    dataTitulos.pop(0)
+    dataTitulos.pop(0)
+    dataTitulos.pop(-1)
+
+    for data_datos in datos["DATAS_DATOS"]:
+        dataDatos = data_datos.split(datos["SEPARADOR_REQ"])
+        dataDatos.pop(0)
+        dataDatos.pop(-1)
+
+        if datos["TIENE_OK_Y_CODIGO"]:
+            dataDatos.pop(0)
+            dataDatos.pop(0)
+
+            posiciones = []
+
+            for i in range(len(dataTitulos)):
+                if (dataDatos[i].strip() != ""):
+                    posiciones.append(i)
+
+            jsonData = ""
+            contador = len(posiciones)
+            jsonData2 = {}
+            if posiciones != []:
+
+                """ jsonData = '{' + '"' """
+
+                if posiciones:
+                    for i in range(len(posiciones)):
+                        jsonData2[dataTitulos[posiciones[i]].strip()] = dataDatos[posiciones[i]].strip()
+                        """
+                        titData = dataTitulos[posiciones[i]].strip() + '"' + ':' + '"' + dataDatos[posiciones[i]].strip() + '"'
+                        if (contador>1):
+                            jsonData = jsonData + titData + ',"'
+                            contador -= 1
+                        else:
+                            jsonData = jsonData + titData
+
+                jsonData = jsonData + '}'
+                """
+            else: jsonData = "{}"
+
+            for programa in programas:
+                if programa == "":
+                    programa = "Cambiar la palabra Transaccion del feature con una 'o'"
+
+                newRow = {
+                    "servicio": mock["programFormat1"],
+                    "gherking": programa,
+                    "data": json.dumps(jsonData2)
+                }
+
+                with open("jsons\postman\postman.csv", "a", newline='') as outfile:
+                    fieldnames = ["servicio", "gherking", "data"]
+                    file = csv.DictWriter(outfile, fieldnames=fieldnames)
+                    file.writerow(newRow)
+
+def crear_config_json (path, service):
+    file = path + "/" + "config.json"
+    http = '/tnconnector/[0-9]+.[0-9]+/' + service
+    jsonConfigText = {
+                         'priority': 0,
+                         'times': {
+                             'unlimited': 'true'
+                         },
+                         'timeToLive': {
+                             'unlimited': 'true'
+                         },
+                         'httpRequest': {
+                                'path': http,
+                                'method': 'POST'
+                         },
+                        'httpResponse': {
+                            'statusCode': 200,
+                            'headers': {
+                                'content-type': ['application/json']
+                            }
+                        }
+    }
+    with open(file, "w") as outfile:
+        outfile.write(json.dumps(jsonConfigText,  indent=4, separators=(',', ': ')))
 
 def interfaz():
     aceptar = False
@@ -202,8 +300,11 @@ def interfaz():
 def crearCSVdeArchivos(carpeta, nombreFinal):
     listaDeArchivos = os.listdir("./" + carpeta)
     rows = []
+    lista = []
     for archivo in listaDeArchivos:
+        lista.append(snake_a_cammel(archivo.split(".")[0]))
         rows.append([archivo.split(".")[0], snake_a_cammel(archivo.split(".")[0])])
+    print(lista)
     with open(nombreFinal + ".csv", 'w', newline='') as csvfile:
         csvwriter = csv.writer(csvfile)
         csvwriter.writerows(rows)

@@ -6,6 +6,7 @@ if not os.path.isdir('gherkins'):
     os.mkdir('gherkins')
     print("carpeta creda, i")
 else:
+    funciones.crearCSVdeArchivos("gherkins", "listaCustody")
     #Ejecuta la interfaz
     carpetaMidd, opcion_crear_jsons, opcion_crear_steps = funciones.interfaz()
 
