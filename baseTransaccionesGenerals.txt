@@ -1,0 +1,73 @@
+package com.ebanking.midd.service.YYYY;
+
+import java.util.ArrayList;
+import java.util.List;
+import com.ebanking.midd.model.RequestXXXX;
+import com.ebanking.midd.model.ResponseXXXX;
+import com.ebanking.midd.tn.connector.model.RequestTLLL;
+import com.ebanking.midd.tn.connector.model.TLLLInput;
+import com.ebanking.midd.tn.connector.model.ResponseTLLL;
+import com.ebanking.midd.tn.connector.model.TLLLOutput;
+import com.ebanking.midd.tn.connector.model.TransactionRequestHeader;
+import com.ebanking.midd.tn.connector.BBBBClient;
+import com.ebanking.midd.util.MiddServicceUtil;
+import com.ebanking.midd.model.XXXXInput;
+import com.ebanking.midd.model.XXXXOutput;
+import com.ebanking.midd.model.XXXXGeneralListGeneral;
+import com.ebanking.midd.model.XXXXGeneral;
+import com.ebanking.midd.tn.connector.model.TLLLGeneral;
+
+public class TLLL {
+	public static ResponseTLLL execute(TransactionRequestHeader opHeader,
+									   RequestXXXX request,
+									   ResponseXXXX response) {
+
+		XXXXInput CCCCInput = request.getData();
+		RequestTLLL tnRequest = new RequestTLLL();
+		MiddServicceUtil.initTnHeader(tnRequest, request);
+
+		TLLLInput tnData = new TLLLInput();
+
+		//Modifica los datos de entrada con este formato:
+		//tnData.setModo(CCCCInput.getModo());
+
+
+		tnRequest.setData(tnData);
+
+		ResponseTLLL tnResponse = BBBBClient.LTTT(tnRequest);
+		TLLLOutput tnResponseData = tnResponse.getData();
+		MiddServicceUtil.initResponseHeader(tnResponse, response);
+
+		if(tnResponseData != null) {
+			XXXXOutput CCCCOutput = new XXXXOutput();
+			response.setData(CCCCOutput);
+
+			XXXXGeneralListGeneral CCCCGeneral = new XXXXGeneralListGeneral();
+			CCCCOutput.setXXXXGenerals(CCCCGeneral);
+
+			ArrayList<XXXXGeneral> CCCCGeneralList = new ArrayList<>();
+			CCCCGeneral.setXXXXGenerals(CCCCGeneralList);
+
+			int i = 0;
+			List<TLLLGeneral> rowset = tnResponseData.getTLLLGenerals();
+
+			if(rowset != null) {
+				int count = rowset.size();
+				while(i < count) {
+					TLLLGeneral responseItem = rowset.get(i);
+					XXXXGeneral item = new XXXXGeneral();
+
+					//modifica los datos de salida con este formato
+					//item.setNumTarOut(responseItem.getNumTarOut());
+
+					CCCCGeneralList.add(item);
+					i++;
+				}
+			}
+			if (i == 0) {
+				CCCCOutput.setXXXXGenerals(null);
+			}
+		}
+		return tnResponse;
+	}
+}

@@ -1,0 +1,16 @@
+package com.ebanking.midd.service;
+
+import com.ebanking.midd.model.RequestXXXX;
+import com.ebanking.midd.model.ResponseXXXX;
+import com.ebanking.midd.service.YYYY.TLLL;
+import com.ebanking.midd.tn.connector.model.ResponseTLLL;
+import com.ebanking.midd.tn.connector.model.TransactionRequestHeader;
+
+public class XXXX {
+	public static ResponseXXXX execute(RequestXXXX request) {
+		ResponseXXXX response = new ResponseXXXX();
+		TransactionRequestHeader opHeader = new TransactionRequestHeader();
+		ResponseTLLL responseTLLL = TLLL.execute(opHeader ,request, response);
+		return response;
+	}
+}

@@ -27,16 +27,112 @@ def crear_steps(mock_utils_asign_inserted, midd):
     for i in range(len(programasNombres)):
         f = open('base.txt', 'r')
         programaNuevo = f.read()
-        programaNuevo = programaNuevo.replace("XXXX", programasNombres[i])
-        programaNuevo = programaNuevo.replace("YYYY", programas_nombres[i])
-        programaNuevo = programaNuevo.replace("AAAA", midd)
-        programaNuevo = programaNuevo.replace("BBBB", midd.capitalize())
-        programaNuevo = programaNuevo.replace("CCCC", decapitalize_first_letter(programasNombres[i]))
+        programaNuevo = programaNuevo.replace("XXXX", programasNombres[i]) #ProgramaNombre
+        programaNuevo = programaNuevo.replace("YYYY", programas_nombres[i]) #programa_nombre
+        programaNuevo = programaNuevo.replace("AAAA", midd) #custody
+        programaNuevo = programaNuevo.replace("BBBB", midd[0].capitalize() + midd[1:]) #Custody
+        programaNuevo = programaNuevo.replace("CCCC", decapitalize_first_letter(programasNombres[i])) #programaNombre
         nf = open('steps/{midd}/{nombre}Step.java'.format(nombre=programasNombres[i], midd=midd), 'w')
         nf.write(programaNuevo)
         nf.close()
         f.close()
 
+def crear_transaccion(mock_utils_asign_inserted, midd):
+    if not os.path.isdir('servicios'):
+        os.mkdir('servicios')
+    if not os.path.isdir('servicios/{midd}'.format(midd=midd)):
+        os.mkdir('servicios/{midd}'.format(midd=midd))
+
+    mock_utils_asign = [
+        {"programInternList": ["PEKM"], "programFormat1": "datos_kyc"},
+        {"programInternList": ["PEKM", "PE00", "PE10"], "programFormat1": "data_test_kyc"}
+    ]
+
+    if mock_utils_asign_inserted != None:
+        mock_utils_asign = mock_utils_asign_inserted
+
+    #En caso de necesitar agregar algo a la mock_utlis_asign hacerlo aca
+
+
+    programas_nombres = [elemento["programFormat1"] for elemento in mock_utils_asign]
+    programasNombres = [(''.join([word.capitalize() for word in elemento["programFormat1"].split("_")])) for elemento in
+                        mock_utils_asign]
+    transacciones = [elemento["programInternList"][0] for elemento in mock_utils_asign]
+
+    for i in range(len(programasNombres)):
+        f = open('baseTransaccionesGenerals.txt', 'r')
+        programaNuevo = f.read()
+        programaNuevo = programaNuevo.replace("XXXX", programasNombres[i]) #ProgramaNombre
+        programaNuevo = programaNuevo.replace("YYYY", programas_nombres[i]) #programa_nombre
+        programaNuevo = programaNuevo.replace("AAAA", midd) #custody
+        programaNuevo = programaNuevo.replace("BBBB", midd[0].capitalize() + midd[1:]) #Custody
+        programaNuevo = programaNuevo.replace("CCCC", decapitalize_first_letter(programasNombres[i])) #programaNombre
+        programaNuevo = programaNuevo.replace("TTTT", transacciones[i]) #TRX1
+        programaNuevo = programaNuevo.replace("TLLL", transacciones[i][0] + transacciones[i][1:].lower()) #Trx1
+        programaNuevo = programaNuevo.replace("LTTT", transacciones[i][0].lower() + transacciones[i][1:]) #tRX1
+        if not os.path.isdir('servicios/{midd}/{nombre}'.format(midd=midd, nombre=programas_nombres[i])):
+            os.mkdir('servicios/{midd}/{nombre}'.format(midd=midd, nombre=programas_nombres[i]))
+        nf = open('servicios/{midd}/{nombreSC}/{trx}.java'.format(midd=midd, trx=(transacciones[i][0] + transacciones[i][1:].lower()), nombreSC=programas_nombres[i]), 'w')
+        nf.write(programaNuevo)
+        nf.close()
+        f.close()
+    for i in range(len(programasNombres)):
+        f = open('baseServicio.txt', 'r')
+        programaNuevo = f.read()
+        programaNuevo = programaNuevo.replace("XXXX", programasNombres[i]) #ProgramaNombre
+        programaNuevo = programaNuevo.replace("YYYY", programas_nombres[i]) #programa_nombre
+        programaNuevo = programaNuevo.replace("AAAA", midd) #custody
+        programaNuevo = programaNuevo.replace("BBBB", midd[0].capitalize() + midd[1:]) #Custody
+        programaNuevo = programaNuevo.replace("CCCC", decapitalize_first_letter(programasNombres[i])) #programaNombre
+        programaNuevo = programaNuevo.replace("TTTT", transacciones[i]) #TRX1
+        programaNuevo = programaNuevo.replace("TLLL", transacciones[i][0] + transacciones[i][1:].lower()) #Trx1
+        programaNuevo = programaNuevo.replace("LTTT", transacciones[i][0].lower() + transacciones[i][1:]) #tRX1
+        if not os.path.isdir('servicios/{midd}'.format(midd=midd)):
+            os.mkdir('servicios/{midd}'.format(midd=midd))
+        nf = open('servicios/{midd}/{nombreCC}.java'.format(midd=midd, nombreCC=programasNombres[i]), 'w')
+        nf.write(programaNuevo)
+        nf.close()
+        f.close()
+
+def crear_test(mock_utils_asign_inserted, midd):
+    if not os.path.isdir('tests'):
+        os.mkdir('tests')
+    if not os.path.isdir('tests/{midd}'.format(midd=midd)):
+        os.mkdir('tests/{midd}'.format(midd=midd))
+
+    mock_utils_asign = [
+        {"programInternList": ["PEKM"], "programFormat1": "datos_kyc"},
+        {"programInternList": ["PEKM", "PE00", "PE10"], "programFormat1": "data_test_kyc"}
+    ]
+
+    if mock_utils_asign_inserted != None:
+        mock_utils_asign = mock_utils_asign_inserted
+
+    #En caso de necesitar agregar algo a la mock_utlis_asign hacerlo aca
+
+
+    programas_nombres = [elemento["programFormat1"] for elemento in mock_utils_asign]
+    programasNombres = [(''.join([word.capitalize() for word in elemento["programFormat1"].split("_")])) for elemento in
+                        mock_utils_asign]
+    transacciones = [elemento["programInternList"][0] for elemento in mock_utils_asign]
+
+    for i in range(len(programasNombres)):
+        f = open('baseTest.txt', 'r')
+        programaNuevo = f.read()
+        programaNuevo = programaNuevo.replace("XXXX", programasNombres[i]) #ProgramaNombre
+        programaNuevo = programaNuevo.replace("YYYY", programas_nombres[i]) #programa_nombre
+        programaNuevo = programaNuevo.replace("AAAA", midd) #custody
+        programaNuevo = programaNuevo.replace("BBBB", midd[0].capitalize() + midd[1:]) #Custody
+        programaNuevo = programaNuevo.replace("CCCC", decapitalize_first_letter(programasNombres[i])) #programaNombre
+        programaNuevo = programaNuevo.replace("TTTT", transacciones[i]) #TRX1
+        programaNuevo = programaNuevo.replace("TLLL", transacciones[i][0] + transacciones[i][1:].lower()) #Trx1
+        programaNuevo = programaNuevo.replace("LTTT", transacciones[i][0].lower() + transacciones[i][1:]) #tRX1
+        if not os.path.isdir('tests/{midd}'.format(midd=midd)):
+            os.mkdir('tests/{midd}'.format(midd=midd))
+        nf = open('tests/{midd}/{nombreCC}Test.java'.format(midd=midd, nombreCC=programasNombres[i]), 'w')
+        nf.write(programaNuevo)
+        nf.close()
+        f.close()
 
 def snake_a_cammel(palabra_snake):
     return ''.join([word.capitalize() for word in palabra_snake.split("_")])
@@ -96,7 +192,7 @@ def crear_archivos_jsons(datos, nombre, tipo, programas):
         contador += 1
 
 
-def obtener_datos_y_o_crear_jsons(crear_jsons=True):
+def obtener_datos_y_o_crear_jsons(crear_jsons=True, crear_csv=False):
     ESPERANDO = 0
     EXTRAER_NOMBRES = 1
     EXTRAER_DATOS = 2
@@ -211,30 +307,15 @@ def cargar_csv(datos, programas, mock):
             posiciones = []
 
             for i in range(len(dataTitulos)):
-                if (dataDatos[i].strip() != ""):
+                if dataDatos[i].strip() != "":
                     posiciones.append(i)
 
-            jsonData = ""
-            contador = len(posiciones)
             jsonData2 = {}
-            if posiciones != []:
-
-                """ jsonData = '{' + '"' """
+            if posiciones:
 
                 if posiciones:
                     for i in range(len(posiciones)):
                         jsonData2[dataTitulos[posiciones[i]].strip()] = dataDatos[posiciones[i]].strip()
-                        """
-                        titData = dataTitulos[posiciones[i]].strip() + '"' + ':' + '"' + dataDatos[posiciones[i]].strip() + '"'
-                        if (contador>1):
-                            jsonData = jsonData + titData + ',"'
-                            contador -= 1
-                        else:
-                            jsonData = jsonData + titData
-
-                jsonData = jsonData + '}'
-                """
-            else: jsonData = "{}"
 
             for programa in programas:
                 if programa == "":
@@ -277,6 +358,7 @@ def crear_config_json (path, service):
         outfile.write(json.dumps(jsonConfigText,  indent=4, separators=(',', ': ')))
 
 def interfaz():
+    global opcion_crear_servicio, opcion_test, opcion_crear_test
     aceptar = False
     carpetaMidd = None
     opcion_crear_jsons = None
@@ -285,19 +367,27 @@ def interfaz():
         carpetaMidd = input("ingrese el nombre del MIDD: ")
         opcion_crear_jsons = input("quiere crear los jsons: Si(1) No(0) ")
         opcion_crear_steps = input("quiere crear los steps: Si(1) No(0) ")
+        opcion_crear_servicio = input("quiere crear los servicios: Si(1) No(0) ")
+        opcion_crear_test = input("quiere crear los tests: Si(1) No(0) ")
         opcion_json = "NO"
         opcion_step = "NO"
+        opcion_servicio = "NO"
+        opcion_test = "NO"
         if opcion_crear_jsons == "1":
             opcion_json = "SI"
         if opcion_crear_steps == "1":
             opcion_step = "SI"
-        print(
-            "usted eligio la capeta midd {carpeta}, {opcion_json} hacer los jsons y {opcion_step} hacer los steps".format(
-                carpeta=carpetaMidd, opcion_json=opcion_json, opcion_step=opcion_step))
+        if opcion_crear_servicio == "1":
+            opcion_servicio = "SI"
+        if opcion_crear_test == "1":
+            opcion_test = "SI"
+
+        print("usted eligio la capeta midd {carpeta}\n{opcion_json} hacer los jsons\n{opcion_step} hacer los steps \n{opcion_servicio} hacer los servicios\n{opcion_test} hacer los test".format(
+                carpeta=carpetaMidd, opcion_json=opcion_json, opcion_step=opcion_step, opcion_servicio=opcion_servicio, opcion_test=opcion_test))
         correcto = input("¿Es correcto? Si(1) No(0): ")
         if correcto == "1":
             aceptar = True
-    return carpetaMidd, opcion_crear_jsons, opcion_crear_steps
+    return carpetaMidd, opcion_crear_jsons, opcion_crear_steps, opcion_crear_servicio, opcion_crear_test
 
 def crearCSVdeArchivos(carpeta, nombreFinal):
     listaDeArchivos = os.listdir("./" + carpeta)

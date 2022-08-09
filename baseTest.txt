@@ -1,0 +1,55 @@
+package com.ebanking.midd.service.test;
+
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
+import org.junit.BeforeClass;
+import org.junit.Test;
+
+import com.ebanking.common.util.Common;
+import com.ebanking.midd.model.XXXXInput;
+import com.ebanking.midd.model.RequestXXXX;
+import com.ebanking.midd.model.RequestHeader;
+import com.ebanking.midd.model.ResponseXXXX;
+import com.ebanking.midd.service.BBBBImpl;
+import com.ebanking.util.SQLUtil;
+import com.midd.HttpConnector;
+//@Ignore("to be implemented")
+public class XXXXTest {
+
+	@BeforeClass
+	public static void setup() {
+		Common.setup("src/test/resources/config.xml");
+	}
+
+	@Test
+	public void testXXXX() {
+		ResponseXXXX response = null;
+		ResponseXXXX origResponse = null;
+		try {
+			BBBBImpl AAAA = new BBBBImpl();
+			RequestXXXX request = new RequestXXXX();
+			RequestHeader header = new RequestHeader();
+			header.setChannel("autotest");
+			request.setHeader(header);
+			XXXXInput data = new XXXXInput();
+
+			//Ingrese los datos a utilizar con el formato
+			//data.setOpcion("MM");
+
+			request.setData(data);
+			response = AAAA.CCCC(request);
+			System.out.println(HttpConnector.marshal(response));
+			HttpConnector.threadDebugMode.set(10);
+			origResponse = (ResponseXXXX) HttpConnector.getInstance().execute("YYYY", request, ResponseXXXX.class);
+			System.out.println(HttpConnector.marshal(origResponse));
+		} catch(Exception ex) {
+			ex.printStackTrace();
+		}
+		assertNotNull(response);
+		assertNotNull(origResponse);
+		assertTrue(origResponse.getHeader().getResultCode().equals("ok"));
+		assertTrue(response.getHeader().getResultCode().equals("ok"));
+		assertTrue(origResponse.getData().equals(response.getData()));
+	}
+}
